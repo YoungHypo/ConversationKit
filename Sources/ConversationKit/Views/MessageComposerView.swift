@@ -56,90 +56,99 @@ public struct MessageComposerView: View {
   }
   
   public var body: some View {
-    if #available(iOS 26.0, *) {
-      GlassEffectContainer {
-        HStack(alignment: .bottom) {
-          if !disableAttachments {
-            Menu {
-              attachmentActions
-            } label: {
-              Image(systemName: "plus")
-            }
-            .buttonStyle(.glass)
-            .controlSize(.large)
-            .buttonBorderShape(.circle)
-          }
-
-          VStack {
-            attachmentPreview
-          
-            HStack(alignment: .bottom) {
-              TextField("Enter a message", text: $message, axis: .vertical)
-                .frame(minHeight: 32)
-                .padding(EdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 0))
-                .onSubmit(of: .text) { onSubmitAction() }
-
-              Button(action: { onSubmitAction() }) {
-                Image(systemName: "arrow.up")
-              }
-              .buttonStyle(.borderedProminent)
-              .padding(EdgeInsets(top: 7, leading: 0, bottom: 7, trailing: 7))
-            }
-          }
-          .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20.0))
-          .offset(x: -5.0, y: 0.0)
-        }
-      }
-      .padding([.horizontal, .bottom], 8)
-    } else {
-      // provide compatible attachment actions and glass effect for iOS 18 and below
-      HStack(alignment: .bottom) {
-        if !disableAttachments {
-          Menu {
-            attachmentActions
-          } label: {
-            Image(systemName: "plus")
-              .foregroundColor(.primary)
-          }
-          .controlSize(.large)
-          .frame(width: 44, height: 44)
-          .background(.regularMaterial)
-          .clipShape(Circle())
-          .overlay(
-            Circle()
-              .stroke(Color(.separator), lineWidth: 0.5)
-          )
-          .padding(.trailing, 8)
-        }
-
-        VStack {
-          attachmentPreview
-
+    #if canImport(GlassEffectContainer) && canImport(GlassEffect)
+      if #available(iOS 26.0, *) {
+        GlassEffectContainer {
           HStack(alignment: .bottom) {
-            TextField("Enter a message", text: $message, axis: .vertical)
-              .frame(minHeight: 32)
-              .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 0))
-              .onSubmit(of: .text) { onSubmitAction() }
-
-            Button(action: { onSubmitAction() }) {
-              Image(systemName: "arrow.up")
+            if !disableAttachments {
+              Menu {
+                attachmentActions
+              } label: {
+                Image(systemName: "plus")
+              }
+              .buttonStyle(.glass)
+              .controlSize(.large)
+              .buttonBorderShape(.circle)
             }
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.circle)
-            .controlSize(.regular)
-            .padding(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 7))
+
+            VStack {
+              attachmentPreview
+          
+              HStack(alignment: .bottom) {
+                TextField("Enter a message", text: $message, axis: .vertical)
+                  .frame(minHeight: 32)
+                  .padding(EdgeInsets(top: 7, leading: 16, bottom: 7, trailing: 0))
+                  .onSubmit(of: .text) { onSubmitAction() }
+
+                Button(action: { onSubmitAction() }) {
+                  Image(systemName: "arrow.up")
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(EdgeInsets(top: 7, leading: 0, bottom: 7, trailing: 7))
+              }
+            }
+            .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20.0))
+            .offset(x: -5.0, y: 0.0)
           }
         }
+        .padding([.horizontal, .bottom], 8)
+      } else {
+        // provide compatible attachment actions and glass effect for iOS 18 and below
+        messageComposerViewForiOS18
+      }
+    #else
+    messageComposerViewForiOS18
+    #endif
+  }
+
+  @ViewBuilder
+  private var messageComposerViewForiOS18: some View {
+    HStack(alignment: .bottom) {
+      if !disableAttachments {
+        Menu {
+          attachmentActions
+        } label: {
+          Image(systemName: "plus")
+            .foregroundColor(.primary)
+        }
+        .controlSize(.large)
+        .frame(width: 44, height: 44)
         .background(.regularMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .clipShape(Circle())
         .overlay(
-          RoundedRectangle(cornerRadius: 22)
+          Circle()
             .stroke(Color(.separator), lineWidth: 0.5)
         )
+        .padding(.trailing, 8)
       }
-      .padding(.top, 8)
-      .padding([.horizontal, .bottom], 16)
+
+      VStack {
+        attachmentPreview
+
+        HStack(alignment: .bottom) {
+          TextField("Enter a message", text: $message, axis: .vertical)
+            .frame(minHeight: 32)
+            .padding(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 0))
+            .onSubmit(of: .text) { onSubmitAction() }
+
+          Button(action: { onSubmitAction() }) {
+            Image(systemName: "arrow.up")
+          }
+          .buttonStyle(.borderedProminent)
+          .buttonBorderShape(.circle)
+          .controlSize(.regular)
+          .padding(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 7))
+        }
+      }
+      .background(.regularMaterial)
+      .clipShape(RoundedRectangle(cornerRadius: 22))
+      .overlay(
+        RoundedRectangle(cornerRadius: 22)
+          .stroke(Color(.separator), lineWidth: 0.5)
+      )
     }
+    .padding(.top, 8)
+    .padding([.horizontal, .bottom], 16)
   }
 }
 
