@@ -42,7 +42,7 @@ public struct AttachmentPreviewCard<AttachmentType: Attachment>: View {
 }
 
 public struct ConcentricClipShapeModifier: ViewModifier {
-  func body(content: Content) -> some View {
+  public func body(content: Content) -> some View {
     if #available(iOS 26.0, *) {
       content
         .clipShape(.rect(corners: .concentric(minimum: 12), isUniform: false))
