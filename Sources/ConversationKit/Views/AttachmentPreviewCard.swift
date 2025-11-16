@@ -30,15 +30,7 @@ public struct AttachmentPreviewCard<AttachmentType: Attachment>: View {
   public var body: some View {
     ZStack(alignment: .topTrailing) {
       Group {
-        if let imageAttachment = attachment as? ImageAttachment {
-          Image(uiImage: imageAttachment.image)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-        }
-        else {
-          Rectangle()
-            .fill(Color.gray)
-        }
+        AnyView(attachment.previewView())
       }
       .frame(width: 100, height: 100)
       .modifier(ConcentricClipShapeModifier())
