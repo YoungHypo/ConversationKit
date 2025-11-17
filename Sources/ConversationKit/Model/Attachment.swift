@@ -18,7 +18,4 @@
 
 import SwiftUI
 
-public protocol Attachment: Identifiable, Hashable {
-  @ViewBuilder
-  func previewView() -> any View
-}
+public protocol Attachment: Identifiable, Hashable {}

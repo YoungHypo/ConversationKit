@@ -35,9 +35,8 @@ public struct ImageAttachment: Attachment {
   }
 }
 
-extension ImageAttachment {
-  @ViewBuilder
-  public func previewView() -> any View {
+extension ImageAttachment: View {
+  public var body: some View {
     Image(uiImage: image)
       .resizable()
       .aspectRatio(contentMode: .fill)
