@@ -19,5 +19,4 @@
 import SwiftUI
 
 public protocol Attachment: Identifiable, Hashable {
-
 }
