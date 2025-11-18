@@ -18,4 +18,6 @@
 
 import SwiftUI
 
-public protocol Attachment: Identifiable, Hashable {}
+public protocol Attachment: Identifiable, Hashable {
+
+}
